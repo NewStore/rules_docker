@@ -35,6 +35,8 @@ def _impl(ctx):
   stamp_inputs = []
   if ctx.attr.stamp:
     stamp_inputs = [ctx.info_file, ctx.version_file]
+    if ctx.attr.stamp_inputs:
+      stamp_inputs += ctx.files.stamp_inputs
 
   image = _get_layers(ctx, ctx.attr.image, ctx.files.image)
 
@@ -114,6 +116,11 @@ container_push = rule(
         "stamp": attr.bool(
             default = False,
             mandatory = False,
+        ),
+        "stamp_inputs": attr.label_list(
+            default = [],
+            mandatory = False,
+            allow_files = True,
         ),
     }.items() + _layer_tools.items()),
     executable = True,
